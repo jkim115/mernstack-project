@@ -1,39 +1,17 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit';
+// This file is the central point where all things related to redux will be imported
 
-// Use createSlice() to avoid having to write out boilerplate
-// code: actionTypes, switch case statement, and combineReducer()
-const studentsSlice = createSlice({
-	name: 'students',
-	initialState: [],
-	reducers: {
-		addStudent(state, action) {
-			state.push(action.payload);
-		},
-		removeStudent(state, action) {
-			//
-		},
-	},
-});
+import { configureStore } from '@reduxjs/toolkit';
+import {
+	addStudent,
+	removeStudent,
+	studentReducer,
+} from './slices/StudentSlice';
 
 const store = configureStore({
 	reducer: {
-		students: studentsSlice.reducer,
+		students: studentReducer,
 	},
 });
 
-export { store };
-
-// testing
-const startingState = store.getState();
-console.log(startingState);
-
-store.dispatch({
-	// No need to define actionType and switch case statement
-	type: 'students/addStudent',
-	payload: {
-		name: 'Jay',
-		password: 'asdf',
-	},
-});
-
-console.log(store.getState());
+// Export store and re-export addStudent and removeStudent
+export { store, addStudent, removeStudent };
