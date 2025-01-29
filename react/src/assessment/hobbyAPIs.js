@@ -19,13 +19,3 @@ export const fetchHobbiesFromDB = async () => {
 		return null;
 	}
 };
-
-export const fetchHobbiesByUserId = async (userId) => {
-	try {
-		const response = await axios.get('http://localhost:9000/hobby/fetch');
-		return response.data;
-	} catch (error) {
-		console.error('Error fetching hobby:', error.message);
-		return null;
-	}
-};
