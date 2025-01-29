@@ -37,8 +37,7 @@ studentRouter.post('/login', (req, res) => {
 	})
 		.then((result) => {
 			if (result) {
-				// The student credentials matches
-				res.status(200).send();
+				res.status(200).send(result);
 			} else {
 				// Send back an empty response with 401 status code (Unathorized)
 				res.status(401).send();

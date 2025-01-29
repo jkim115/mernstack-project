@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-require('../api/api');	// Run the script to connect to MongoDB
+require('../api/api'); // Run the script to connect to MongoDB
 
 const Schema = mongoose.Schema;
 
@@ -8,6 +8,7 @@ const studentSchema = new Schema({
 	password: String,
 	address: String,
 	phone: String,
+	hobbies: Object,
 });
 
 // Load schema into mongoose

@@ -1,67 +1,61 @@
 import React, { useState } from 'react';
-import { saveStudentToDB } from './api';
-import { useDispatch } from 'react-redux';
-import { addStudent } from '../store';
 import { NavLink } from 'react-router-dom';
-
-function Signup() {
+import { authenticateStudent } from '../api';
+import { useDispatch } from 'react-redux';
+import { addStudent } from '../../store';
+function Login() {
 	const [student, setStudent] = useState({ name: '', password: '' });
 	const [message, setMessage] = useState('');
 	const dispatch = useDispatch();
 
-	// Controlled input
-	const handleInputChange = (event) => {
+	const handleTextChange = (event) => {
 		const classList = event.target.classList;
 
 		if (classList.contains('name')) {
-			// We need to first spread current state; otherwise, password will be overwritten
 			setStudent({ ...student, name: event.target.value });
 		} else if (classList.contains('password')) {
 			setStudent({ ...student, password: event.target.value });
 		}
 	};
 
-	const handleSubmit = async (event) => {
+	const handleLogin = async (event) => {
 		event.preventDefault();
 
-		const statusCode = await saveStudentToDB(student);
-
-		if (statusCode === 200) {
-			// Save the student to the store
-			dispatch(addStudent(student));
-			// Display success message
-			setMessage('Signed up successfully!');
-		} else if (statusCode === 403) {
-			// Display error message
-			setMessage('The student name already exists.');
+		// Do we need to add the student to the store?
+		const loggedStudent = await authenticateStudent(student);
+		console.log(loggedStudent);
+		if (!student) {
+			setMessage('Invalid name and password.');
+		} else {
+			setMessage("You're now logged in!");
+			dispatch(addStudent(loggedStudent));
 		}
 	};
 
 	return (
 		<div className='d-flex justify-content-center align-items-center mt-5'>
-			<form onSubmit={handleSubmit}>
-				<div>
-					<h2 className='fw-bold mb-4 text-center'>Sign up now</h2>
-				</div>
-
+			<form onSubmit={handleLogin}>
 				<div data-mdb-input-init className='form-outline mb-4'>
 					<input
 						type='text'
 						className='form-control name'
-						placeholder='Enter your name'
+						placeholder='Enter username'
 						value={student.name}
-						onChange={handleInputChange}
+						onChange={handleTextChange}
 					/>
 				</div>
 
-				<div data-mdb-input-init className='form-outline mb-4'>
+				<div data-mdb-input-init className='password form-outline mb-4'>
 					<input
 						type='password'
 						className='form-control password'
 						placeholder='Enter password'
 						value={student.password}
-						onChange={handleInputChange}
+						onChange={handleTextChange}
 					/>
+				</div>
+				<div className='text-center'>
+					<p>{message}</p>
 				</div>
 
 				<button
@@ -69,16 +63,17 @@ function Signup() {
 					data-mdb-button-init
 					data-mdb-ripple-init
 					className='btn btn-primary btn-block mb-4 w-100'>
-					Sign up
+					Sign in
 				</button>
-				<div>{message}</div>
-				<br />
+
 				<div className='text-center'>
-					<NavLink to={'/login'}>Go back to Login Page</NavLink>
+					<p>
+						Not a member? <NavLink to='/signup'>Register</NavLink>
+					</p>
 				</div>
 			</form>
 		</div>
 	);
 }
 
-export default Signup;
+export default Login;
